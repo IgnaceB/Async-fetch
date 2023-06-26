@@ -61,35 +61,51 @@ fetch("https://pkgstore.datahub.io/core/country-list/data_json/data/8c458f2d15d9
 
 
 
-let a=0
 
 if (localStorage.length>0){
-	a=parseInt(localStorage.getItem("myNumber"))+1
-	console.log(a)
+	
 	for (let i=0;i<localStorage.length;i++){
 
 		const div=document.createElement("div")
 		const p=document.createElement("p")
 		document.body.appendChild(div)
 		div.appendChild(p)
-		p.textContent=localStorage.getItem("myData"+i)
+		p.textContent=localStorage.getItem(i)
 	}
 }
 let myData=[]
 const button2=document.getElementById("submit")
-const fetchName= (X,Y) => fetch("https://api.agify.io?name="+X+"&country_id="+Y)
+/*const fetchName= (X,Y) => fetch("https://api.agify.io?name="+X+"&country_id="+Y)*/
+const fetchName= (X,Y) => {fetch("https://api.agify.io?name="+X+"&country_id="+Y)}
+
 const myName=document.getElementById("name")
 
-const submit=()=>{
+const waitFetch= async (X,Y)=>{
+const response= await fetch("https://api.agify.io?name="+X+"&country_id="+Y)
+	const json= await response.json()
+	return json
+}
+
+console.log(waitFetch("John","BE"))
+
+
+const submit= async ()=>{
 	let name=myName.value
 	let age
 	let thiscountry=country.value
-	console.log(fetchName(name,thiscountry))
-	fetchName(name,thiscountry)
+	
+	/*const response= await fetchName(name,thiscountry)*/
+	const json=  await waitFetch(name,thiscountry)
+	
+	
+	/*fetchName(name,thiscountry)
+
 		.then (response=>response.json())
-		.then((json) => {
+		.then((json) => {*/
+
+
 			age=json.age
-			console.log(age)
+			console.log(json)
 			const div=document.createElement("div")
 			const p=document.createElement("p")
 			document.body.appendChild(div)
@@ -99,7 +115,7 @@ const submit=()=>{
 			myName.value=""
 			// localStorage.setItem("myData" +a,Array.from(["a", 5, false]))
 			// localStorage.setItem("myNumber",a)
-			localStorage.setItem(name + "-" + country.value, localStorage.mydataAll + ', ' + myText)
+			localStorage.setItem(localStorage.length, myText)
 
 			console.log(localStorage)
 
@@ -107,12 +123,14 @@ const submit=()=>{
 
 			// })
 			// a++
-		})
+		}
+/*		)
 
 		.catch(error => {
 			console.log('There was an error!', error)
 		})
 
-}
+}*/
+
 
 button2.addEventListener("click",submit)
